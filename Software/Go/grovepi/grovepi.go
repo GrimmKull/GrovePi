@@ -28,6 +28,8 @@ const (
 	ANALOG_WRITE  = 4
 	PIN_MODE      = 5
 	DHT_READ      = 40
+	LED_STRIP_CLR = 50
+	RESET_LEDS    = 51
 )
 
 type GrovePi struct {
@@ -108,6 +110,20 @@ func (grovePi *GrovePi) PinMode(pin byte, mode string) error {
 	}
 	return nil
 }
+
+func (grovePi *GrovePi) SetLedStripColor(red, green, blue byte) error {
+	b := []byte{LED_STRIP_CLR, red, green, blue}
+	err := grovePi.i2cDevice.Write(1, b)
+
+	return err
+}
+
+func (grovePi *GrovePi) ResetLedStrip() error {
+        b := []byte{RESET_LEDS, 0, 0, 0} 
+        err := grovePi.i2cDevice.Write(1, b)
+        
+        return err
+}     
 
 func (grovePi *GrovePi) ReadDHT(pin byte) (float32, float32, error) {
 	b := []byte{DHT_READ, pin, 1, 0}

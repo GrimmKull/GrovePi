@@ -35,6 +35,7 @@ uRead_cmd=[7]	#Ultrasonic read
 acc_xyz_cmd=[20]	#Accelerometer (+/- 1.5g) read
 rtc_getTime_cmd=[30]	#RTC get time
 dht_temp_cmd=[40]	#DHT Pro sensor temperature
+led_strip_color_cmd=[50]
 
 #Function declarations of the various functions used for encoding and sending data from RPi to Arduino
 
@@ -131,6 +132,12 @@ def rtc_getTime():
 	read_i2c_byte(address)
 	number = read_i2c_block(address)
 	return number
+
+#Set LED strip color
+def setLedStripColor(r,g,b,dual):
+	write_i2c_block(address,led_strip_color_cmd+[r,g,b,dual])
+	#Delay necessary for sensor to finish changing color
+	time.sleep(.6)
 
 #Read and return temperature and humidity from Grove DHT Pro
 def dht(pin,module_type):
